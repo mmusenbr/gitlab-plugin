@@ -140,14 +140,14 @@ public class GitLabConnection extends AbstractDescribableImpl<GitLabConnection> 
 
     public GitLabClient getClient(Item item, String jobCredentialId) {
         final String clientId;
-        final String token;
         GitlabCredentialResolver credentialResolver = new GitlabCredentialResolver();
         if ((jobCredentialId == null) || jobCredentialId.equals(apiTokenId)) {
             clientId = "global";
             credentialResolver.setCredentialsId(apiTokenId);
         } else {
-            // Add prefix to credential ID to avoid collision with "global"
-            clientId = "alternative-" + jobCredentialId;
+            // Add unique prefix to credential ID to avoid collision with "global" and other jobs
+            String clientIdSuffix = item != null ? item.getFullName() : "alternative";
+            clientId = clientIdSuffix + "-" + jobCredentialId;
             credentialResolver.setCredentialsId(jobCredentialId);
             credentialResolver.setItem(item);
         }
