@@ -7,6 +7,7 @@ import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
 import com.dabsquared.gitlabjenkins.connection.GitLabApiToken;
+import com.dabsquared.gitlabjenkins.connection.GitLabCredentialMatcher;
 import com.dabsquared.gitlabjenkins.connection.GitlabCredentialResolver;
 import com.dabsquared.gitlabjenkins.gitlab.JacksonConfig;
 import com.dabsquared.gitlabjenkins.gitlab.api.GitLabClient;
@@ -202,7 +203,9 @@ public class ResteasyGitLabClientBuilder extends GitLabClientBuilder {
                             context,
                             ACL.SYSTEM,
                             URIRequirementBuilder.fromUri(url).build()),
-                    CredentialsMatchers.withId(credentialResolver.getCredentialsId()));
+                    CredentialsMatchers.both(
+                            CredentialsMatchers.withId(credentialResolver.getCredentialsId()),
+                            new GitLabCredentialMatcher()));
 
             if (item != null) {
                 com.cloudbees.plugins.credentials.CredentialsProvider.track(item, credentials);
